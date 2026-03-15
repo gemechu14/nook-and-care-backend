@@ -65,3 +65,5 @@ class ListingHouseRule(Base):
 
 
 
+
+

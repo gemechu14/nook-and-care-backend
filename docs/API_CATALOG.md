@@ -652,3 +652,5 @@ async function loadAllCatalogData() {
 - Listing associations (e.g., which amenities a listing has) are managed through the Listings API, not through these catalog endpoints
 
 
+
+

@@ -18,3 +18,5 @@ crud_listing_amenity = CRUDListingAmenity(ListingAmenity)
 
 
 
+
+

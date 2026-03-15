@@ -76,3 +76,5 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
 
 
+
+
