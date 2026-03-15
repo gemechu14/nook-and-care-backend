@@ -49,6 +49,27 @@ class ListingCertificationRead(ListingCertificationBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingCertificationBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    certification_id: uuid.UUID
+    license_number: Optional[str] = None
+
+
+class ListingCertificationBatchCreate(BaseModel):
+    items: list[ListingCertificationBatchItem]
+
+
+class ListingCertificationBatchDeleteItem(BaseModel):
+    listing_id: uuid.UUID
+    certification_id: uuid.UUID
+
+
+class ListingCertificationBatchDelete(BaseModel):
+    items: list[ListingCertificationBatchDeleteItem]
+
+
 
 
 

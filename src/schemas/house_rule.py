@@ -51,6 +51,27 @@ class ListingHouseRuleRead(ListingHouseRuleBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingHouseRuleBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    house_rule_id: uuid.UUID
+    display_order: Optional[int] = None
+
+
+class ListingHouseRuleBatchCreate(BaseModel):
+    items: list[ListingHouseRuleBatchItem]
+
+
+class ListingHouseRuleBatchDeleteItem(BaseModel):
+    listing_id: uuid.UUID
+    house_rule_id: uuid.UUID
+
+
+class ListingHouseRuleBatchDelete(BaseModel):
+    items: list[ListingHouseRuleBatchDeleteItem]
+
+
 
 
 

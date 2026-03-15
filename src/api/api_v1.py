@@ -13,6 +13,7 @@ from src.api.routers.favorites import router as favorites_router
 from src.api.routers.subscriptions import router as subscriptions_router
 from src.api.routers.payments import router as payments_router
 from src.api.routers.reports import router as reports_router
+from src.api.routers.listing_features import router as listing_features_router
 from src.api.routers.catalog import (
     amenities_router,
     activities_router,
@@ -40,6 +41,7 @@ api_router.include_router(favorites_router)
 api_router.include_router(subscriptions_router)
 api_router.include_router(payments_router)
 api_router.include_router(reports_router)
+api_router.include_router(listing_features_router)
 
 # ── Catalog / lookup routers ──────────────────────────────────────────────────
 api_router.include_router(amenities_router)

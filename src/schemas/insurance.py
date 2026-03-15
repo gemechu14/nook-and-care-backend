@@ -44,6 +44,21 @@ class ListingInsuranceOptionRead(ListingInsuranceOptionBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingInsuranceOptionBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    insurance_option_id: uuid.UUID
+
+
+class ListingInsuranceOptionBatchCreate(BaseModel):
+    items: list[ListingInsuranceOptionBatchItem]
+
+
+class ListingInsuranceOptionBatchDelete(BaseModel):
+    items: list[ListingInsuranceOptionBatchItem]
+
+
 
 
 

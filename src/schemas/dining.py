@@ -44,6 +44,21 @@ class ListingDiningOptionRead(ListingDiningOptionBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingDiningOptionBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    dining_option_id: uuid.UUID
+
+
+class ListingDiningOptionBatchCreate(BaseModel):
+    items: list[ListingDiningOptionBatchItem]
+
+
+class ListingDiningOptionBatchDelete(BaseModel):
+    items: list[ListingDiningOptionBatchItem]
+
+
 
 
 

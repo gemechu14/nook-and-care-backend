@@ -50,6 +50,21 @@ class ListingAmenityRead(ListingAmenityBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingAmenityBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    amenity_id: uuid.UUID
+
+
+class ListingAmenityBatchCreate(BaseModel):
+    items: list[ListingAmenityBatchItem]
+
+
+class ListingAmenityBatchDelete(BaseModel):
+    items: list[ListingAmenityBatchItem]
+
+
 
 
 

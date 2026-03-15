@@ -51,6 +51,27 @@ class ListingEquipmentRead(ListingEquipmentBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingEquipmentBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    equipment_id: uuid.UUID
+    quantity: int = 1
+
+
+class ListingEquipmentBatchCreate(BaseModel):
+    items: list[ListingEquipmentBatchItem]
+
+
+class ListingEquipmentBatchDeleteItem(BaseModel):
+    listing_id: uuid.UUID
+    equipment_id: uuid.UUID
+
+
+class ListingEquipmentBatchDelete(BaseModel):
+    items: list[ListingEquipmentBatchDeleteItem]
+
+
 
 
 

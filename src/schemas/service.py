@@ -55,6 +55,28 @@ class ListingServiceRead(ListingServiceBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingServiceBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    treatment_service_id: uuid.UUID
+    price: Optional[float] = None
+    is_included: bool = False
+
+
+class ListingServiceBatchCreate(BaseModel):
+    items: list[ListingServiceBatchItem]
+
+
+class ListingServiceBatchDeleteItem(BaseModel):
+    listing_id: uuid.UUID
+    treatment_service_id: uuid.UUID
+
+
+class ListingServiceBatchDelete(BaseModel):
+    items: list[ListingServiceBatchDeleteItem]
+
+
 
 
 

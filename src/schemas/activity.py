@@ -46,6 +46,21 @@ class ListingActivityRead(ListingActivityBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingActivityBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    activity_id: uuid.UUID
+
+
+class ListingActivityBatchCreate(BaseModel):
+    items: list[ListingActivityBatchItem]
+
+
+class ListingActivityBatchDelete(BaseModel):
+    items: list[ListingActivityBatchItem]
+
+
 
 
 

@@ -44,6 +44,21 @@ class ListingLanguageRead(ListingLanguageBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingLanguageBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    language_id: uuid.UUID
+
+
+class ListingLanguageBatchCreate(BaseModel):
+    items: list[ListingLanguageBatchItem]
+
+
+class ListingLanguageBatchDelete(BaseModel):
+    items: list[ListingLanguageBatchItem]
+
+
 
 
 

@@ -46,6 +46,21 @@ class ListingSafetyFeatureRead(ListingSafetyFeatureBase):
     created_at: datetime
 
 
+# ── Batch Operations ────────────────────────────────────────────────────────────
+
+class ListingSafetyFeatureBatchItem(BaseModel):
+    listing_id: uuid.UUID
+    safety_feature_id: uuid.UUID
+
+
+class ListingSafetyFeatureBatchCreate(BaseModel):
+    items: list[ListingSafetyFeatureBatchItem]
+
+
+class ListingSafetyFeatureBatchDelete(BaseModel):
+    items: list[ListingSafetyFeatureBatchItem]
+
+
 
 
 
