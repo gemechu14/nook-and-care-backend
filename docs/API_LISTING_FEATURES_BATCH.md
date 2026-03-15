@@ -866,6 +866,7 @@ export const batchCreateAmenities = async (
 | House Rules | `POST /listing-house-rules/batch` | `DELETE /listing-house-rules/batch` |
 | Equipment | `POST /listing-equipment/batch` | `DELETE /listing-equipment/batch` |
 | Services | `POST /listing-services/batch` | `DELETE /listing-services/batch` |
+| Images | `POST /listing-images/batch` or `/listing-images/batch/upload` | `DELETE /listing-images/batch` |
 
 ---
 
@@ -919,6 +920,308 @@ curl -X DELETE "http://localhost:8000/api/v1/listing-amenities/batch" \
 4. **Response Order**: The response array maintains the same order as the request items.
 
 5. **Empty Batches**: Sending an empty `items` array will return a 400 error.
+
+---
+
+---
+
+## 11. Listing Images (Bulk Upload & Delete)
+
+### Batch Upload Images (Base64/URL)
+
+**Endpoint:** `POST /api/v1/listing-images/batch`
+
+**Request Body:**
+```json
+{
+  "items": [
+    {
+      "listing_id": "123e4567-e89b-12d3-a456-426614174000",
+      "image_data_base64": "iVBORw0KGgoAAAANSUhEUgAA...",
+      "filename": "facility-photo-1.jpg",
+      "content_type": "image/jpeg",
+      "display_order": 0,
+      "is_primary": true
+    },
+    {
+      "listing_id": "123e4567-e89b-12d3-a456-426614174000",
+      "image_url": "https://example.com/image.jpg",
+      "filename": "facility-photo-2.jpg",
+      "display_order": 1,
+      "is_primary": false
+    }
+  ]
+}
+```
+
+**Note:** 
+- Either `image_data_base64` or `image_url` must be provided
+- `image_data_base64` should be base64-encoded image data (data URL prefix optional)
+- Maximum file size: 10MB per image
+- `display_order` defaults to 0 if not provided
+- `is_primary` defaults to false if not provided
+
+**Response:** `201 Created`
+```json
+[
+  {
+    "id": "423e4567-e89b-12d3-a456-426614174003",
+    "listing_id": "123e4567-e89b-12d3-a456-426614174000",
+    "image_url": null,
+    "filename": "facility-photo-1.jpg",
+    "content_type": "image/jpeg",
+    "file_size": 245678,
+    "display_order": 0,
+    "is_primary": true,
+    "created_at": "2024-01-01T00:00:00Z"
+  }
+]
+```
+
+### Batch Upload Images (Multipart/Form-Data)
+
+**Endpoint:** `POST /api/v1/listing-images/batch/upload`
+
+**Content-Type:** `multipart/form-data`
+
+**Form Fields:**
+- `listing_id` (UUID, required) - Listing ID to attach images to
+- `files` (File[], required) - Array of image files to upload
+
+**Supported Formats:** JPEG, PNG, GIF, WebP, BMP
+**Maximum File Size:** 10MB per file
+
+**Example Request (cURL):**
+```bash
+curl -X POST "http://localhost:8000/api/v1/listing-images/batch/upload" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "listing_id=123e4567-e89b-12d3-a456-426614174000" \
+  -F "files=@image1.jpg" \
+  -F "files=@image2.png" \
+  -F "files=@image3.gif"
+```
+
+**Response:** `201 Created` - Same format as base64 upload
+
+### Batch Delete Images
+
+**Endpoint:** `DELETE /api/v1/listing-images/batch`
+
+**Request Body:**
+```json
+{
+  "items": [
+    {
+      "image_id": "423e4567-e89b-12d3-a456-426614174003"
+    },
+    {
+      "image_id": "523e4567-e89b-12d3-a456-426614174004"
+    }
+  ]
+}
+```
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "id": "423e4567-e89b-12d3-a456-426614174003",
+    "listing_id": "123e4567-e89b-12d3-a456-426614174000",
+    "filename": "facility-photo-1.jpg",
+    "created_at": "2024-01-01T00:00:00Z"
+  }
+]
+```
+
+**Note:** Only images belonging to listings owned by the authenticated provider can be deleted.
+
+---
+
+## Frontend Integration for Images
+
+### Batch Upload with Base64 (React)
+
+```typescript
+async function batchUploadImages(
+  listingId: string,
+  imageFiles: File[],
+  accessToken: string
+): Promise<any[]> {
+  // Convert files to base64
+  const items = await Promise.all(
+    imageFiles.map(async (file, index) => {
+      const base64 = await fileToBase64(file);
+      return {
+        listing_id: listingId,
+        image_data_base64: base64,
+        filename: file.name,
+        content_type: file.type,
+        display_order: index,
+        is_primary: index === 0
+      };
+    })
+  );
+
+  const response = await fetch(`${API_BASE_URL}/listing-images/batch`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    },
+    body: JSON.stringify({ items })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to upload images');
+  }
+
+  return await response.json();
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+}
+```
+
+### Batch Upload with FormData (React)
+
+```typescript
+async function batchUploadImageFiles(
+  listingId: string,
+  imageFiles: File[],
+  accessToken: string
+): Promise<any[]> {
+  const formData = new FormData();
+  formData.append('listing_id', listingId);
+  
+  imageFiles.forEach(file => {
+    formData.append('files', file);
+  });
+
+  const response = await fetch(`${API_BASE_URL}/listing-images/batch/upload`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+      // Don't set Content-Type - browser will set it with boundary
+    },
+    body: formData
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to upload images');
+  }
+
+  return await response.json();
+}
+```
+
+### Batch Delete Images
+
+```typescript
+async function batchDeleteImages(
+  imageIds: string[],
+  accessToken: string
+): Promise<any[]> {
+  const response = await fetch(`${API_BASE_URL}/listing-images/batch`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    },
+    body: JSON.stringify({
+      items: imageIds.map(imageId => ({ image_id: imageId }))
+    })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to delete images');
+  }
+
+  return await response.json();
+}
+```
+
+### Complete Image Manager Hook
+
+```typescript
+import { useState } from 'react';
+
+export function useBatchImages({ listingId, accessToken }: Props) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const batchUpload = async (files: File[]) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('listing_id', listingId);
+      files.forEach(file => formData.append('files', file));
+
+      const response = await fetch(`${API_BASE_URL}/listing-images/batch/upload`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to upload images');
+      }
+
+      return await response.json();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const batchDelete = async (imageIds: string[]) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/listing-images/batch`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          items: imageIds.map(id => ({ image_id: id }))
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to delete images');
+      }
+
+      return await response.json();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { batchUpload, batchDelete, loading, error };
+}
+```
 
 ---
 

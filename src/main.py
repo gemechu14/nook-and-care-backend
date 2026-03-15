@@ -3,9 +3,12 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from fastapi.staticfiles import StaticFiles
 
 from src.api.api_v1 import api_router
 from src.core.config import settings
@@ -97,6 +100,13 @@ app.add_middleware(
 # ── Routers ───────────────────────────────────────────────────────────────────
 
 app.include_router(api_router)
+
+# ── Static Files ───────────────────────────────────────────────────────────────
+
+# Serve uploaded images
+upload_dir = Path(settings.UPLOAD_DIR)
+upload_dir.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
 
 
 # ── Health check ──────────────────────────────────────────────────────────────
