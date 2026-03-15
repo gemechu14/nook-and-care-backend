@@ -38,3 +38,4 @@ class CRUDSubscription(CRUDBase[Subscription, SubscriptionCreate, SubscriptionUp
 crud_subscription = CRUDSubscription(Subscription)
 
 
+

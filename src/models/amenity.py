@@ -62,3 +62,4 @@ class ListingAmenity(Base):
     amenity: Mapped["Amenity"] = relationship("Amenity", back_populates="listing_amenities")
 
 
+

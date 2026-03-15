@@ -60,3 +60,4 @@ class ListingEquipment(Base):
     equipment: Mapped["Equipment"] = relationship("Equipment", back_populates="listing_equipment")
 
 
+

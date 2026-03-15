@@ -3,14 +3,18 @@ from __future__ import annotations
 import uuid
 from typing import List
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.core.dependencies import DBSession, PaginationParams
+from src.core.dependencies import DBSession, PaginationParams, http_bearer
 from src.crud.crud_provider import crud_provider
 from src.schemas.provider import ProviderCreate, ProviderRead, ProviderUpdate
 from src.services import provider_service
 
-router = APIRouter(prefix="/providers", tags=["Providers"])
+router = APIRouter(
+    prefix="/providers",
+    tags=["Providers"],
+    dependencies=[Depends(http_bearer)],
+)
 
 
 @router.get("/", response_model=List[ProviderRead])

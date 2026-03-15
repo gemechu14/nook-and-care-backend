@@ -40,3 +40,4 @@ class CRUDReview(CRUDBase[Review, ReviewCreate, ReviewUpdate]):
 crud_review = CRUDReview(Review)
 
 
+

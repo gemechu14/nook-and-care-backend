@@ -3,9 +3,9 @@ from __future__ import annotations
 import uuid
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from src.core.dependencies import DBSession, PaginationParams
+from src.core.dependencies import DBSession, PaginationParams, http_bearer
 from src.crud.crud_listing import crud_listing
 from src.schemas.listing import ListingCreate, ListingRead, ListingUpdate
 from src.services import listing_service
@@ -48,28 +48,28 @@ def get_listing(listing_id: uuid.UUID, db: DBSession):
     return listing
 
 
-@router.post("/", response_model=ListingRead, status_code=201)
+@router.post("/", response_model=ListingRead, status_code=201, dependencies=[Depends(http_bearer)])
 def create_listing(payload: ListingCreate, db: DBSession):
     return listing_service.create_listing(db, payload)
 
 
-@router.put("/{listing_id}", response_model=ListingRead)
+@router.put("/{listing_id}", response_model=ListingRead, dependencies=[Depends(http_bearer)])
 def update_listing(listing_id: uuid.UUID, payload: ListingUpdate, db: DBSession):
     return listing_service.update_listing(db, listing_id, payload)
 
 
-@router.post("/{listing_id}/activate", response_model=ListingRead)
+@router.post("/{listing_id}/activate", response_model=ListingRead, dependencies=[Depends(http_bearer)])
 def activate_listing(listing_id: uuid.UUID, db: DBSession):
     """Admin: activate a listing."""
     return listing_service.activate_listing(db, listing_id)
 
 
-@router.post("/{listing_id}/feature", response_model=ListingRead)
+@router.post("/{listing_id}/feature", response_model=ListingRead, dependencies=[Depends(http_bearer)])
 def feature_listing(listing_id: uuid.UUID, db: DBSession, is_featured: bool = True):
     return listing_service.feature_listing(db, listing_id, is_featured)
 
 
-@router.delete("/{listing_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{listing_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(http_bearer)])
 def delete_listing(listing_id: uuid.UUID, db: DBSession):
     deleted = crud_listing.delete(db, listing_id)
     if deleted is None:

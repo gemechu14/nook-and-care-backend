@@ -52,3 +52,4 @@ class Subscription(Base):
     provider: Mapped["Provider"] = relationship("Provider", back_populates="subscriptions")
 
 
+

@@ -50,3 +50,4 @@ class ListingAmenityRead(ListingAmenityBase):
     created_at: datetime
 
 
+

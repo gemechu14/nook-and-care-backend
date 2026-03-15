@@ -43,3 +43,4 @@ class Favorite(Base):
     listing: Mapped["Listing"] = relationship("Listing", back_populates="favorites")
 
 
+

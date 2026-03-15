@@ -29,3 +29,4 @@ class CRUDPayment(CRUDBase[Payment, PaymentCreate, PaymentUpdate]):
 crud_payment = CRUDPayment(Payment)
 
 
+

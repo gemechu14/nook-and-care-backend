@@ -72,3 +72,4 @@ class ListingRead(ListingBase):
     updated_at: datetime
 
 
+

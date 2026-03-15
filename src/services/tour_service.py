@@ -72,3 +72,4 @@ def complete_tour(db: Session, tour_id: uuid.UUID) -> Tour:
     return update_tour_status(db, tour_id, "COMPLETED")
 
 
+

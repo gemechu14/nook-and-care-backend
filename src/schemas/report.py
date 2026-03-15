@@ -32,3 +32,4 @@ class ReportRead(ReportBase):
     updated_at: datetime
 
 
+

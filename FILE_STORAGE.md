@@ -184,3 +184,4 @@ If you have existing `listing_images` records with `image_url` only:
 - Consider using external storage (S3, Cloudinary) for production with many/large images
 
 
+

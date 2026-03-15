@@ -36,3 +36,4 @@ class CRUDFavorite(CRUDBase[Favorite, FavoriteCreate, FavoriteRead]):
 crud_favorite = CRUDFavorite(Favorite)
 
 
+

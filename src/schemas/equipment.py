@@ -51,3 +51,4 @@ class ListingEquipmentRead(ListingEquipmentBase):
     created_at: datetime
 
 
+

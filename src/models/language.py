@@ -59,3 +59,4 @@ class ListingLanguage(Base):
     language: Mapped["Language"] = relationship("Language", back_populates="listing_languages")
 
 
+

@@ -37,3 +37,4 @@ class SubscriptionRead(SubscriptionBase):
     updated_at: datetime
 
 
+

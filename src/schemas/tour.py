@@ -33,3 +33,4 @@ class TourRead(TourBase):
     updated_at: datetime
 
 
+

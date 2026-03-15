@@ -70,3 +70,4 @@ class Report(Base):
     listing: Mapped[Optional["Listing"]] = relationship("Listing", back_populates="reports")
 
 
+

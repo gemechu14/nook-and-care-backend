@@ -39,3 +39,4 @@ class CRUDTour(CRUDBase[Tour, TourCreate, TourUpdate]):
 crud_tour = CRUDTour(Tour)
 
 
+

@@ -26,3 +26,4 @@ class CRUDReport(CRUDBase[Report, ReportCreate, ReportUpdate]):
 crud_report = CRUDReport(Report)
 
 
+

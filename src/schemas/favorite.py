@@ -22,3 +22,4 @@ class FavoriteRead(FavoriteBase):
     created_at: datetime
 
 
+

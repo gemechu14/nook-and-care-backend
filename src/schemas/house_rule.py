@@ -51,3 +51,4 @@ class ListingHouseRuleRead(ListingHouseRuleBase):
     created_at: datetime
 
 
+

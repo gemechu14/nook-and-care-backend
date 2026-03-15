@@ -24,3 +24,4 @@ crud_treatment_service = CRUDTreatmentService(TreatmentService)
 crud_listing_service = CRUDListingService(ListingService)
 
 
+

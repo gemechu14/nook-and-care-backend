@@ -26,3 +26,4 @@ crud_insurance_option = CRUDInsuranceOption(InsuranceOption)
 crud_listing_insurance_option = CRUDListingInsuranceOption(ListingInsuranceOption)
 
 
+

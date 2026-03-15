@@ -24,3 +24,4 @@ crud_house_rule = CRUDHouseRule(HouseRule)
 crud_listing_house_rule = CRUDListingHouseRule(ListingHouseRule)
 
 
+

@@ -3,13 +3,17 @@ from __future__ import annotations
 import uuid
 from typing import List
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.core.dependencies import DBSession, PaginationParams
+from src.core.dependencies import DBSession, PaginationParams, http_bearer
 from src.crud.crud_payment import crud_payment
 from src.schemas.payment import PaymentCreate, PaymentRead, PaymentUpdate
 
-router = APIRouter(prefix="/payments", tags=["Payments"])
+router = APIRouter(
+    prefix="/payments",
+    tags=["Payments"],
+    dependencies=[Depends(http_bearer)],
+)
 
 
 @router.get("/", response_model=List[PaymentRead])

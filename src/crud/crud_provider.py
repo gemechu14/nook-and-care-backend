@@ -30,3 +30,4 @@ class CRUDProvider(CRUDBase[Provider, ProviderCreate, ProviderUpdate]):
 crud_provider = CRUDProvider(Provider)
 
 
+

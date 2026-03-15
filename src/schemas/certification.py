@@ -49,3 +49,4 @@ class ListingCertificationRead(ListingCertificationBase):
     created_at: datetime
 
 
+

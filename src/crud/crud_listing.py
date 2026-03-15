@@ -68,3 +68,4 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
 crud_listing = CRUDListing(Listing)
 
 
+

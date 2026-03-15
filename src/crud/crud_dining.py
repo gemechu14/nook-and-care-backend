@@ -24,3 +24,4 @@ crud_dining_option = CRUDDiningOption(DiningOption)
 crud_listing_dining_option = CRUDListingDiningOption(ListingDiningOption)
 
 
+

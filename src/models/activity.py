@@ -61,3 +61,4 @@ class ListingActivity(Base):
     activity: Mapped["Activity"] = relationship("Activity", back_populates="listing_activities")
 
 
+
