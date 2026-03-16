@@ -7,13 +7,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from src.core.dependencies import DBSession, PaginationParams, http_bearer
 from src.crud.crud_listing import crud_listing
-from src.schemas.listing import ListingCreate, ListingRead, ListingUpdate
+from src.schemas.listing import ListingCreate, ListingRead, ListingListRead, ListingUpdate
 from src.services import listing_service
 
 router = APIRouter(prefix="/listings", tags=["Listings"])
 
 
-@router.get("/", response_model=List[ListingRead])
+@router.get("/", response_model=List[ListingListRead])
 def list_listings(
     db: DBSession,
     pagination: PaginationParams,

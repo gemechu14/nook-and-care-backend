@@ -171,6 +171,17 @@ class ListingServiceWithDetails(BaseModel):
     created_at: datetime
 
 
+class ListingListRead(ListingBase):
+    """Simplified listing schema for list endpoints without nested relationships."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    provider_id: uuid.UUID
+    status: str
+    created_at: datetime
+    updated_at: datetime
+
+
 class ListingRead(ListingBase):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
