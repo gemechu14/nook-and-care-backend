@@ -28,3 +28,4 @@ crud_listing_equipment = CRUDListingEquipment(ListingEquipment)
 
 
 
+

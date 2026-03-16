@@ -180,6 +180,7 @@ class ListingListRead(ListingBase):
     status: str
     created_at: datetime
     updated_at: datetime
+    images: List[ListingImageRead] = Field(default_factory=list)
 
 
 class ListingRead(ListingBase):

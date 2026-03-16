@@ -96,7 +96,10 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
         skip: int = 0,
         limit: int = 20,
     ) -> Sequence[Listing]:
-        stmt = select(Listing)
+        stmt = (
+            select(Listing)
+            .options(selectinload(Listing.images))
+        )
         
         if city:
             stmt = stmt.where(Listing.city.ilike(f"%{city}%"))
@@ -107,9 +110,8 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
         if max_price is not None:
             stmt = stmt.where(Listing.price <= max_price)
         stmt = stmt.offset(skip).limit(limit)
-        listings = db.execute(stmt).scalars().all()
         
-        return listings
+        return db.execute(stmt).scalars().all()
 
 
 crud_listing = CRUDListing(Listing)
