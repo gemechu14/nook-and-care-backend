@@ -64,10 +64,12 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
         )
         return db.execute(stmt).scalars().all()
 
-    def get_featured(self, db: Session, skip: int = 0, limit: int = 20) -> Sequence[Listing]:
+    def get_featured(
+        self, db: Session, skip: int = 0, limit: int = 20, status: Optional[str] = None
+    ) -> Sequence[Listing]:
         stmt = (
             select(Listing)
-            .where(Listing.status == "ACTIVE", Listing.is_featured.is_(True))
+            .where(Listing.is_featured.is_(True))
             .options(
                 selectinload(Listing.images),
                 selectinload(Listing.listing_amenities).selectinload(ListingAmenity.amenity),
@@ -81,9 +83,15 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
                 selectinload(Listing.listing_equipment).selectinload(ListingEquipment.equipment),
                 selectinload(Listing.listing_services).selectinload(ListingService.treatment_service),
             )
-            .offset(skip)
-            .limit(limit)
         )
+        
+        # Filter by status if provided, otherwise default to ACTIVE (backward compatibility)
+        if status:
+            stmt = stmt.where(Listing.status == status)
+        else:
+            stmt = stmt.where(Listing.status == "ACTIVE")
+        
+        stmt = stmt.offset(skip).limit(limit)
         return db.execute(stmt).scalars().all()
 
     def search(
@@ -93,6 +101,7 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
         care_type: Optional[str] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
+        status: Optional[str] = None,
         skip: int = 0,
         limit: int = 20,
     ) -> Sequence[Listing]:
@@ -109,6 +118,8 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
             stmt = stmt.where(Listing.price >= min_price)
         if max_price is not None:
             stmt = stmt.where(Listing.price <= max_price)
+        if status:
+            stmt = stmt.where(Listing.status == status)
         stmt = stmt.offset(skip).limit(limit)
         
         return db.execute(stmt).scalars().all()

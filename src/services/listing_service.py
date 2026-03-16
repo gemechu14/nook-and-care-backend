@@ -84,6 +84,7 @@ def search_listings(
     care_type: Optional[str] = None,
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
+    status: Optional[str] = None,
     skip: int = 0,
     limit: int = 20,
 ) -> Sequence[Listing]:
@@ -93,6 +94,7 @@ def search_listings(
         care_type=care_type,
         min_price=min_price,
         max_price=max_price,
+        status=status,
         skip=skip,
         limit=limit,
     )

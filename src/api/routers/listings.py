@@ -21,6 +21,7 @@ def list_listings(
     care_type: Optional[str] = Query(None),
     min_price: Optional[float] = Query(None),
     max_price: Optional[float] = Query(None),
+    status: Optional[str] = Query(None, description="Filter by status: ACTIVE, INACTIVE, PENDING, SUSPENDED"),
 ):
     skip, limit = pagination
     return listing_service.search_listings(
@@ -29,15 +30,20 @@ def list_listings(
         care_type=care_type,
         min_price=min_price,
         max_price=max_price,
+        status=status,
         skip=skip,
         limit=limit,
     )
 
 
 @router.get("/featured", response_model=List[ListingRead])
-def featured_listings(db: DBSession, pagination: PaginationParams):
+def featured_listings(
+    db: DBSession,
+    pagination: PaginationParams,
+    status: Optional[str] = Query(None, description="Filter by status: ACTIVE, INACTIVE, PENDING, SUSPENDED"),
+):
     skip, limit = pagination
-    return crud_listing.get_featured(db, skip=skip, limit=limit)
+    return crud_listing.get_featured(db, skip=skip, limit=limit, status=status)
 
 
 @router.get("/{listing_id}", response_model=ListingRead)
