@@ -39,3 +39,4 @@ crud_favorite = CRUDFavorite(Favorite)
 
 
 
+
