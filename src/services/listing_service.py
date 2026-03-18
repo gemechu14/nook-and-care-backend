@@ -100,6 +100,17 @@ def search_listings(
     )
 
 
+def get_listings_for_user(db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 20) -> Sequence[Listing]:
+    """Return listings owned by the given user.
+
+    Ownership is derived via Provider.user_id -> Listing.provider_id.
+    """
+    provider = crud_provider.get_by_user_id(db, user_id)
+    if provider is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Provider not found for this user")
+    return crud_listing.get_by_provider(db, provider_id=provider.id, skip=skip, limit=limit)
+
+
 
 
 

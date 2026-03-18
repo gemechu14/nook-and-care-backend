@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from src.core.dependencies import DBSession, PaginationParams, http_bearer
+from src.core.dependencies import CurrentUserID, DBSession, PaginationParams, http_bearer
 from src.crud.crud_listing import crud_listing
 from src.schemas.listing import ListingCreate, ListingRead, ListingListRead, ListingUpdate
 from src.services import listing_service
@@ -44,6 +44,12 @@ def featured_listings(
 ):
     skip, limit = pagination
     return crud_listing.get_featured(db, skip=skip, limit=limit, status=status)
+
+
+@router.get("/me", response_model=List[ListingListRead], dependencies=[Depends(http_bearer)])
+def my_listings(db: DBSession, pagination: PaginationParams, user_id: CurrentUserID):
+    skip, limit = pagination
+    return listing_service.get_listings_for_user(db, uuid.UUID(user_id), skip=skip, limit=limit)
 
 
 @router.get("/{listing_id}", response_model=ListingRead)

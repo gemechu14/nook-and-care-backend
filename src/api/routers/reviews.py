@@ -18,6 +18,12 @@ def list_reviews(db: DBSession, pagination: PaginationParams):
     return crud_review.get_all(db, skip=skip, limit=limit)
 
 
+@router.get("/listing/{listing_id}", response_model=List[ReviewRead])
+def list_reviews_by_listing(listing_id: uuid.UUID, db: DBSession, pagination: PaginationParams):
+    skip, limit = pagination
+    return crud_review.get_by_listing(db, listing_id=listing_id, skip=skip, limit=limit)
+
+
 @router.get("/{review_id}", response_model=ReviewRead)
 def get_review(review_id: uuid.UUID, db: DBSession):
     review = crud_review.get_by_id(db, review_id)

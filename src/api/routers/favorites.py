@@ -5,9 +5,10 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.core.dependencies import DBSession, PaginationParams, http_bearer
+from src.core.dependencies import CurrentUserID, DBSession, PaginationParams, http_bearer
 from src.crud.crud_favorite import crud_favorite
 from src.schemas.favorite import FavoriteCreate, FavoriteRead
+from src.schemas.listing import ListingListRead
 
 router = APIRouter(
     prefix="/favorites",
@@ -20,6 +21,12 @@ router = APIRouter(
 def list_favorites(db: DBSession, pagination: PaginationParams):
     skip, limit = pagination
     return crud_favorite.get_all(db, skip=skip, limit=limit)
+
+
+@router.get("/me/listings", response_model=List[ListingListRead])
+def my_favorited_listings(db: DBSession, pagination: PaginationParams, user_id: CurrentUserID):
+    skip, limit = pagination
+    return crud_favorite.get_favorited_listings_by_user(db, uuid.UUID(user_id), skip=skip, limit=limit)
 
 
 @router.get("/{favorite_id}", response_model=FavoriteRead)
