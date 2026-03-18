@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class TourBase(BaseModel):
@@ -23,12 +23,22 @@ class TourUpdate(BaseModel):
     status: Optional[str] = None
 
 
+class TourBookedByUserRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    id: uuid.UUID
+    full_name: str
+    phone_number: Optional[str] = Field(default=None, alias="phone")
+    email: str
+
+
 class TourRead(TourBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
     status: str
     booked_by_user_id: Optional[uuid.UUID] = None
+    booked_by: Optional[TourBookedByUserRead] = None
     created_at: datetime
     updated_at: datetime
 

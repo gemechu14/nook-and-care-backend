@@ -6,6 +6,7 @@ from typing import Optional, Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
+from src.core.logging import get_logger
 from src.crud.base import CRUDBase
 from src.models.listing import Listing
 from src.models.amenity import ListingAmenity
@@ -19,6 +20,8 @@ from src.models.house_rule import ListingHouseRule
 from src.models.equipment import ListingEquipment
 from src.models.service import ListingService
 from src.schemas.listing import ListingCreate, ListingUpdate
+
+logger = get_logger(__name__)
 
 
 class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
@@ -105,6 +108,18 @@ class CRUDListing(CRUDBase[Listing, ListingCreate, ListingUpdate]):
         skip: int = 0,
         limit: int = 20,
     ) -> Sequence[Listing]:
+        logger.debug(
+            "Listing search filters",
+            extra={
+                "city": city,
+                "care_type": care_type,
+                "min_price": min_price,
+                "max_price": max_price,
+                "status": status,
+                "skip": skip,
+                "limit": limit,
+            },
+        )
         stmt = (
             select(Listing)
             .options(selectinload(Listing.images))
