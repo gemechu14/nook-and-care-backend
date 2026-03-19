@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from src.api.routers.auth import router as auth_router
 from src.api.routers.users import router as users_router
 from src.api.routers.providers import router as providers_router
+from src.api.routers.dashboard import router as dashboard_router
 from src.api.routers.listings import router as listings_router
 from src.api.routers.listing_images import router as listing_images_router
 from src.api.routers.tours import router as tours_router
@@ -33,6 +34,7 @@ api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(auth_router)
 api_router.include_router(users_router)
 api_router.include_router(providers_router)
+api_router.include_router(dashboard_router)
 api_router.include_router(listings_router)
 api_router.include_router(listing_images_router)
 api_router.include_router(tours_router)
