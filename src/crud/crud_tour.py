@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from typing import Any, Optional, Sequence
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
 from src.crud.base import CRUDBase
@@ -44,6 +44,10 @@ class CRUDTour(CRUDBase[Tour, TourCreate, TourUpdate]):
             .limit(limit)
         )
         return db.execute(stmt).scalars().all()
+
+    def count_all(self, db: Session) -> int:
+        stmt = select(func.count(Tour.id))
+        return db.execute(stmt).scalar_one()
 
 
 crud_tour = CRUDTour(Tour)

@@ -229,6 +229,39 @@ def seed_treatment_services(db: Session) -> None:
     logger.info(f"Seeded {len(services)} treatment services.")
 
 
+def seed_equipment(db: Session) -> None:
+    from src.models.equipment import Equipment
+
+    equipment_items = [
+        {"name": "Hospital Bed", "category": "MEDICAL", "description": "Adjustable bed for patient comfort and care"},
+        {"name": "Wheelchair", "category": "MOBILITY", "description": "Manual wheelchair for resident mobility"},
+        {"name": "Walker", "category": "MOBILITY", "description": "Standard walker for assisted walking"},
+        {"name": "Shower Chair", "category": "SAFETY", "description": "Water-resistant chair for safe bathing"},
+        {"name": "Grab Bars", "category": "SAFETY", "description": "Mounted bars in bathrooms and hallways"},
+        {"name": "Oxygen Concentrator", "category": "MEDICAL", "description": "Device for supplemental oxygen therapy"},
+        {"name": "Blood Pressure Monitor", "category": "MEDICAL", "description": "Digital monitor for blood pressure checks"},
+        {"name": "Pulse Oximeter", "category": "MEDICAL", "description": "Device to measure oxygen saturation levels"},
+        {"name": "Patient Lift", "category": "MOBILITY", "description": "Mechanical lift for safe resident transfers"},
+        {"name": "Nebulizer", "category": "MEDICAL", "description": "Respiratory treatment device"},
+        {"name": "Recliner Chair", "category": "COMFORT", "description": "Supportive recliner for elderly residents"},
+        {"name": "Bedside Commode", "category": "SAFETY", "description": "Portable toilet for residents with limited mobility"},
+        {"name": "Hearing Assistance Device", "category": "ASSISTIVE", "description": "Amplification device for hearing support"},
+        {"name": "Medication Cart", "category": "CARE", "description": "Secure cart for medication storage and rounds"},
+        {"name": "Emergency Call Button", "category": "SAFETY", "description": "Resident alert system for emergency assistance"},
+    ]
+
+    for item in equipment_items:
+        _get_or_create(
+            db,
+            Equipment,
+            defaults={"id": uuid.uuid4(), "description": item["description"]},
+            name=item["name"],
+            category=item["category"],
+        )
+
+    logger.info(f"Seeded {len(equipment_items)} equipment items.")
+
+
 def seed_sample_provider_and_listing(db: Session) -> None:
     """Create a sample verified provider with one active listing."""
     from src.models.user import User
@@ -335,6 +368,7 @@ def run_seed() -> None:
         seed_insurance_options(db)
         seed_house_rules(db)
         seed_treatment_services(db)
+        seed_equipment(db)
         seed_sample_provider_and_listing(db)
         db.commit()
         logger.info("Seed completed successfully.")

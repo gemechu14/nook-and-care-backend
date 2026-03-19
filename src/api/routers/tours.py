@@ -3,11 +3,11 @@ from __future__ import annotations
 import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from src.core.dependencies import DBSession, PaginationParams, http_bearer
 from src.crud.crud_tour import crud_tour
-from src.schemas.tour import TourCreate, TourRead, TourUpdate
+from src.schemas.tour import TourCreate, TourListResponse, TourRead, TourUpdate
 from src.services import tour_service
 
 router = APIRouter(
@@ -17,10 +17,25 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[TourRead])
-def list_tours(db: DBSession, pagination: PaginationParams):
+@router.get("/", response_model=TourListResponse)
+def list_tours(
+    db: DBSession,
+    pagination: PaginationParams,
+    page: int = Query(1, ge=1, description="Page number (1-indexed)"),
+    size: int = Query(20, ge=1, le=100, description="Items per page"),
+):
     skip, limit = pagination
-    return crud_tour.get_all(db, skip=skip, limit=limit)
+    items = crud_tour.get_all(db, skip=skip, limit=limit)
+    total = crud_tour.count_all(db)
+    total_pages = (total + size - 1) // size if total > 0 else 0
+    return {
+        "items": items,
+        "page": page,
+        "size": size,
+        "total": total,
+        "total_pages": total_pages,
+        "has_next": page < total_pages,
+    }
 
 
 @router.get("/{tour_id}", response_model=TourRead)

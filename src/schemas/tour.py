@@ -43,6 +43,14 @@ class TourRead(TourBase):
     updated_at: datetime
 
 
+class TourListResponse(BaseModel):
+    items: list[TourRead]
+    page: int
+    size: int
+    total: int
+    total_pages: int
+    has_next: bool
+
 
 
 
