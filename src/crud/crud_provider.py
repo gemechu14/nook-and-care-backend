@@ -14,8 +14,18 @@ from src.schemas.provider import ProviderCreate, ProviderUpdate
 class CRUDProvider(CRUDBase[Provider, ProviderCreate, ProviderUpdate]):
 
     def get_by_user_id(self, db: Session, user_id: uuid.UUID) -> Optional[Provider]:
-        stmt = select(Provider).where(Provider.user_id == user_id)
-        return db.execute(stmt).scalar_one_or_none()
+        """Return the provider profile for this user.
+
+        If multiple provider rows exist for the same ``user_id`` (legacy/duplicate data),
+        returns the most recently created one instead of raising.
+        """
+        stmt = (
+            select(Provider)
+            .where(Provider.user_id == user_id)
+            .order_by(Provider.created_at.desc())
+            .limit(1)
+        )
+        return db.execute(stmt).scalars().first()
 
     def get_verified(self, db: Session, skip: int = 0, limit: int = 20) -> Sequence[Provider]:
         stmt = (
