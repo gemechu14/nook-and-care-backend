@@ -1,0 +1,44 @@
+# Cursor IDE
+.cursor/
+
+# Documentation
+docs/
+
+# API integration guideline (file or folder name variants)
+*API*Integration*Guideline*
+*api*integration*guideline*
+
+# SRS document (folder or similarly named paths)
+srs document/
+
+# Markdown
+*.md
+**/*.md
+
+# SQLite / local database files
+*.db
+**/*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Environment secrets
+.env
+.env.local
+
+# Testing / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE (optional)
+.idea/
+.vscode/
